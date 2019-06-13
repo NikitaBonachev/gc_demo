@@ -117,6 +117,9 @@ class Cart {
                         '<span style="font-size:1.1em"> ' + cartPrice.currency + cartPrice.amount +'</span>' +
                     '</h6>';
                 $('#cart-counter').html(html);
+            },
+            error: function () {
+                obj.createCart(cart.getCart());
             }
         });
     }
