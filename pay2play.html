@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>PayStation 3 Integration Example</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.ico"/>
+    <style>
+        .xpay2Play-widget {
+            box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .55);
+            display: inline-block;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row container">
+        <div class="col m6 center" id="widget-example-green" >
+        </div>
+        <div class="col m6 center" id="widget-example-blue">
+        </div>
+    </div>
+    <div class="row container">
+        <div class="col m6 center" id="widget-example-red">
+        </div>
+        <div class="col m6 center" id="widget-example-gold">
+        </div>
+    </div>
+    <script>
+        var options = {
+            lightbox: {
+                height: '650px'
+            },
+            access_data: {
+                "user": {
+                    "id": {
+                        "value": "johncarter",
+                        "hidden": true
+                    },
+                    "name": {
+                        "value": "John Carter"
+                    },
+                    "country": {
+                        "value": "US",
+                        "allow_modify": true
+                    }
+                },
+                "settings": {
+                    "project_id": 42987,
+                    "language": "en",
+                    "currency": "USD",
+                    "ui": {
+                        "size": "medium"
+                    }
+                },
+                "purchase": {
+                    "pin_codes": {
+                        "codes": [
+                            {
+                                "digital_content": "base_jal_twice"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        var s = document.createElement('script');
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "//static.xsolla.com/embed/pay2play/2.1.6/widget.min.js";
+        s.addEventListener('load', function (e) {
+            var _ = XPay2PlayWidget._;
+
+            var greenWidget = XPay2PlayWidget.create(_.extend({
+                theme : {
+                    foreground: XPay2PlayWidget.foregroundTypes.GREEN,
+                    background: XPay2PlayWidget.backgroundTypes.LIGHT
+                },
+                target_element: '#widget-example-green'
+            }, _.cloneDeep(options)));
+
+            options.access_data.settings.language = "de";
+            options.access_data.settings.currency = "EUR";
+            var blueWidget = XPay2PlayWidget.create(_.extend({
+                theme : {
+                    foreground: XPay2PlayWidget.foregroundTypes.BLUE,
+                    background: XPay2PlayWidget.backgroundTypes.LIGHT
+                },
+                target_element: '#widget-example-blue'
+            }, _.cloneDeep(options)));
+
+            options.access_data.settings.language = "ja";
+            options.access_data.settings.currency = "KRW";
+            var redWidget = XPay2PlayWidget.create(_.extend({
+                theme : {
+                    foreground: XPay2PlayWidget.foregroundTypes.RED,
+                    background: XPay2PlayWidget.backgroundTypes.DARK
+                },
+                target_element: '#widget-example-red'
+            }, _.cloneDeep(options)));
+
+            options.access_data.settings.language = "en";
+            options.access_data.settings.currency = "USD";
+            var goldWidget = XPay2PlayWidget.create(_.extend({
+                theme : {
+                    foreground: XPay2PlayWidget.foregroundTypes.GOLD,
+                    background: XPay2PlayWidget.backgroundTypes.DARK
+                },
+                target_element: '#widget-example-gold'
+            }, _.cloneDeep(options)));
+
+
+            _.each([greenWidget, blueWidget, redWidget, goldWidget], function (widgetInstance) {
+                widgetInstance.on(_.values(XPay2PlayWidget.eventTypes).join(' '), function (event) {
+                });
+            });
+        }, false);
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(s);
+    </script>
+</body>
+</html>

@@ -29,7 +29,6 @@ class Cart {
             },
             success: function (data) {
                 obj.cartId = data.id;
-                console.log(obj.cartId);
                 obj.setCartId(obj.cartId);
                 callback && callback();
             }
