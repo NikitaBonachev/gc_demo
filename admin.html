@@ -1,0 +1,46 @@
+<html>
+    <header>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+        <script
+                src="https://code.jquery.com/jquery-3.4.0.min.js"
+                integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+                crossorigin="anonymous"></script>
+    </header>
+    <body>
+    <div class="row" style="max-width: 800px; display: flex; justify-content: center; align-items: center;">
+        <h4>Проданные корзины</h4>
+    </div>
+    <div id="carts" class="row" style="max-width: 800px; display: flex; justify-content: center; align-items: center;">
+    
+    </div>
+    
+    <script>
+        $.get(
+            {
+                'url': 'http:/localhost:4090/',
+                'success': function (transactions) {
+                    transactions.forEach(function (transaction) {
+                        $('#carts').append(
+                            '   <div style="max-width: 225px; min-height: 225px; margin: 15px;">' +
+                            '       <div class=\"card\">' +
+                            '           <div class="row card-content">' +
+                            '<b>Номер транзакции:</b><br> ' + transaction.transaction.id +
+                            '           <br>' +
+                            '<b>В корзине:</b><br> ' + transaction.cart.items[0].sku +
+                            '           <br>' +
+                            '<b>Пользователь:</b><br> ' + transaction.user.email +
+                            '           </div>' +
+                            '       </div>' +
+                            '   </div>'
+                        )
+                    })
+                }
+            }
+        )
+    </script>
+    </body>
+    </html>
