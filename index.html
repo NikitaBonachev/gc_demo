@@ -1,5 +1,5 @@
-<html>
-    <header>
+<html lang="en">
+    <head tabindex="">
         <!--Import Google Icon Font-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!--Import materialize.css-->
@@ -7,24 +7,30 @@
         <!-- Compiled and minified JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+        <title>Game Commerce Store</title>
+        <link rel="shortcut icon" type="image/png" href="img/favicon.ico"/>
         <script
                 src="https://code.jquery.com/jquery-3.4.0.min.js"
                 integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
                 crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
         <script src="js/cart.js"></script>
-    </header>
+    </head>
 <body>
     <div style="display: flex; justify-content: center; align-items: center; height: 100%;" id="login_wrapper">
         <button id="login" class="waves-effect waves-light btn" style="display: flex; align-self: center" onclick="XL.show()">Login</button>
     </div>
-    <div class="row" id="cart-row">
-        <div class="col s0 offset-s8">
+    <div class="row container" id="cart-row">
+        <div class="col m8">
+            <h2>Game Commerce Store</h2>
+        </div>
+        <div class="col m1" style="margin-top: 40px">
             <a id="cart-button" class="btn-floating waves-effect waves-light btn-large" onclick="cart.buyCart();"><i class="material-icons">shopping_cart</i></a>
         </div>
-        <div id="cart-counter" class="col s2">
+        <div id="cart-counter" class="col s2" style="margin-top: 30px">
         </div>
     </div>
-    <div id="shop" class="row" style="max-width: 800px; display: flex; justify-content: center; align-items: center; height: 100%;">
+    <div id="shop" class="row container collection" style="">
     </div>
 
     <div class="overlay" style="display:none;position: absolute; top:0;left:0;right:0;bottom:0;opacity:0.6;background:#000;z-index:10;">
@@ -47,10 +53,6 @@
     </script>
 
     <script>
-        function buy(sku, token) {
-
-        }
-
         var queryString = window.location.search.substring(1);
         var queryParams = queryString.split('&');
         var queryKeyValue = {};
@@ -61,22 +63,34 @@
 
         if (!!queryKeyValue['token']) {
             cart.setToken(queryKeyValue['token']);
-            cart.createCart();
-            cart.getCart();
+
+            var xsollaCartId = Cookies.get('xsolla_cart_id');
+
+            if (xsollaCartId) {
+                cart.setCartId(xsollaCartId);
+                cart.getCart();
+            } else {
+                cart.createCart(function () {
+                    cart.getCart();
+                });
+            }
 
             $('#login').hide();
             $('#login_wrapper').hide();
+
             $.get(
                 {
                     'url': 'https://store.xsolla.com/api/v1/project/30810/items/virtual_items',
                     'success': function (data) {
                         var items = JSON.parse(data).items;
                         items.forEach(function (item) {
+                            cart.setAvailableItem(item.sku, 1);
+                            item.current_quantity = 1;
                             $('#shop').append(
-                                '   <div style="width: 200px; min-height: 225px; margin: 15px;">' +
+                                '   <div style="min-width: 160px; min-height: 225px;" class="col s3">' +
                                 '       <div class=\"card\" style="padding-top: 20px;">' +
-                                '           <div class=\"card-image waves-effect waves-block waves-light\">' +
-                                '               <img class=\"offset-m2 col m8\" width=\"50\" height=\"100\" src=\"' + item.image_url + '\">' +
+                                '           <div class=\"card-image waves-effect waves-block waves-light\" style="max-height: 100px; max-width: 100px; margin-left: auto; margin-right: auto">' +
+                                '               <img style="min-width: 100%; max-height: 100px;" src=\"' + item.image_url + '\">' +
                                 '           </div>' +
                                 '           <div class="row card-content" style="padding-bottom:0;">' +
                                 '               <h5 class=\"col m12 center\">' + getUsdPrice(item.prices) + '</h5>' +
@@ -84,8 +98,10 @@
                                 '           <div class="row card-content" style="padding-top:0;padding-bottom:0;">' +
                                 '               <button class=\"offset-m1 col m10 btn\" onclick=\"cart.quickBuy(\'' + item.sku + '\',\'' + queryKeyValue['token'] + '\')\">Buy 1 click</button>' +
                                 '           </div>' +
-                                '           <div class="row card-content" style="padding-top:0;padding-bottom:0;">' +
-                                '               <button class=\"offset-m1 col m10 btn waves-effect \" onclick=\"cart.addToCart(\'' + item.sku + '\')\">Add to cart</button>' +
+                                '           <div class="card-action" style="display: flex; justify-content: center">' +
+                                '               <a class="btn-floating btn-small waves-effect" onclick=\"cart.updateAvailableItem(\'' + item.sku + '\', -1)\"><i class="material-icons">remove</i></a>' +
+                                '               <button class="btn waves-effect" data-quantity="1" data-sku="' + item.sku + '" id="add_button_' + item.sku + '" onclick="cart.addToCart(this)" style="margin-left: 5px; margin-right: 5px;">Add to cart 1</button>' +
+                                '               <a class="btn-floating btn-small waves-effect" onclick=\"cart.updateAvailableItem(\'' + item.sku + '\', 1)\"><i class="material-icons">add</i></a>' +
                                 '           </div>' +
                                 '           <div class="row card-content" style="padding-top:0;">' +
                                 '               <button class=\"offset-m1 col m10 red btn waves-effect \" onclick=\"cart.removeItemFromCart(\'' + item.sku + '\')\">Remove</button>' +

@@ -3,20 +3,24 @@
 class Cart {
     cartId;
     token;
+    availableItems;
 
     payStationStyle = {
         width: '740px',
         height: '700px',
         spinner: 'round'
-    }
+    };
 
     setToken(token) {
         this.token = token;
     }
 
-    createCart() {
-        this.cartId = 208;
-        return;
+    setCartId(cartId) {
+        Cookies.set('xsolla_cart_id', cartId);
+        this.cartId = cartId;
+    }
+
+    createCart(callback) {
         var obj = this;
         $.post({
             url: 'https://store.xsolla.com/api/v1/cart',
@@ -25,6 +29,9 @@ class Cart {
             },
             success: function (data) {
                 obj.cartId = data.id;
+                console.log(obj.cartId);
+                obj.setCartId(obj.cartId);
+                callback && callback();
             }
         });
     }
@@ -50,7 +57,9 @@ class Cart {
 
     }
 
-    addToCart(sku) {
+    addToCart(item) {
+        var sku = $(item).data('sku');
+        var quantity = $(item).data('quantity');
         var obj = this;
         $.ajax(
             {
@@ -62,7 +71,7 @@ class Cart {
                     'Authorization': 'Bearer ' + this.token
                 },
                 data: JSON.stringify({
-                    quantity: 1
+                    quantity: quantity
                 }),
                 success: function (data) {
                     M.toast({html: 'Item successfully added to cart!'});
@@ -146,7 +155,6 @@ class Cart {
             amountWithoutDiscount: cartData.price.amount_without_discount,
             currency: '$'
         };
-        ;
     }
 
     getCountItems(cartData){
@@ -156,6 +164,20 @@ class Cart {
         });
 
         return count;
+    }
+
+    setAvailableItem(sku) {
+        if (!this.availableItems) {
+            this.availableItems = {};
+        }
+
+        this.availableItems[sku] = 1;
+    }
+
+    updateAvailableItem(sku, quantity) {
+        this.availableItems[sku] = this.availableItems[sku] + quantity;
+        $('#add_button_' + sku)[0].innerHTML = 'ADD TO CART ' + this.availableItems[sku];
+        $($('#add_button_' + sku)[0]).data('quantity', this.availableItems[sku]);
     }
 }
 
