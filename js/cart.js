@@ -118,8 +118,8 @@ class Cart {
                     '</h6>';
                 $('#cart-counter').html(html);
             },
-            error: function () {
-                obj.createCart(cart.getCart());
+            fail: function () {
+                obj.createCart();
             }
         });
     }
