@@ -82,7 +82,7 @@
                 {
                     'url': 'https://store.xsolla.com/api/v1/project/30810/items/virtual_items',
                     'success': function (data) {
-                        var items = JSON.parse(data).items;
+                        var items = data.items;
                         items.forEach(function (item) {
                             cart.setAvailableItem(item.sku, 1);
                             item.current_quantity = 1;
