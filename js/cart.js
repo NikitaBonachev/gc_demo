@@ -118,7 +118,7 @@ class Cart {
                     '</h6>';
                 $('#cart-counter').html(html);
             },
-            fail: function () {
+            error: function () {
                 obj.createCart();
             }
         });
