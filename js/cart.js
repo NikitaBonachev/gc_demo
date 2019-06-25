@@ -112,10 +112,18 @@ class Cart {
                 var counter = obj.getCountItems(data);
 
                 var html = '<h6>' + counter + ' items</h6>';
-                html += '<h6>' +
+
+                if (cartPrice.amountWithoutDiscount === cartPrice.amount) {
+                    html += '<h6>' +
+                        '<span style="font-size:1.1em"> ' + cartPrice.currency + cartPrice.amount +'</span>' +
+                        '</h6>';
+                } else {
+                    html += '<h6>' +
                         '<span style="text-decoration: line-through;">' + cartPrice.currency + cartPrice.amountWithoutDiscount +'</span>' +
                         '<span style="font-size:1.1em"> ' + cartPrice.currency + cartPrice.amount +'</span>' +
-                    '</h6>';
+                        '</h6>';
+                }
+
                 $('#cart-counter').html(html);
             },
             error: function () {
@@ -151,10 +159,20 @@ class Cart {
         XPayStationWidget.open();
     }
 
+    formatPrice(price) {
+        var parts = ("" + price).split(".");
+
+        if (parts.length > 1) {
+            return parts[0] +  "." + parts[1].substr(0, 2);
+        } else {
+            return price;
+        }
+    }
+
     getPrice(cartData){
         return {
-            amount: cartData.price.amount,
-            amountWithoutDiscount: cartData.price.amount_without_discount,
+            amount: this.formatPrice(cartData.price.amount),
+            amountWithoutDiscount: this.formatPrice(cartData.price.amount_without_discount),
             currency: '$'
         };
     }
