@@ -91,6 +91,9 @@ class Cart {
                 'Content-type': 'application/json',
                 'Authorization': 'Bearer ' + this.token
             },
+            data: JSON.stringify({
+                locale: 'en'
+            }),
             success: function (data) {
                 $('.overlay').hide();
                 obj.openPayStation(data.token);
