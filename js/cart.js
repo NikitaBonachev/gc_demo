@@ -5,6 +5,8 @@ class Cart {
     token;
     availableItems;
 
+    baseURL = 'https://store-api-stage-2417-06.k8s.srv.local/v1';
+
     payStationStyle = {
         width: '740px',
         height: '700px',
@@ -23,7 +25,7 @@ class Cart {
     createCart(callback) {
         var obj = this;
         $.post({
-            url: 'https://store.xsolla.com/api/v1/cart',
+            url: obj.baseURL+'/cart',
             headers: {
                 'Authorization': 'Bearer ' + this.token
             },
@@ -39,7 +41,7 @@ class Cart {
         var obj = this;
         $.ajax(
             {
-                url: 'https://store.xsolla.com/api/v1/cart/'+obj.cartId+'/item/' + sku,
+                url: obj.baseURL+'/cart/'+obj.cartId+'/item/' + sku,
                 method: 'DELETE',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -62,7 +64,7 @@ class Cart {
         var obj = this;
         $.ajax(
             {
-                url: 'https://store.xsolla.com/api/v1/cart/'+obj.cartId+'/item/' + sku,
+                url: obj.baseURL+'/cart/'+obj.cartId+'/item/' + sku,
                 method: 'PUT',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -85,7 +87,7 @@ class Cart {
         var obj = this;
         $('.overlay').show();
         $.post({
-            url: 'https://store.xsolla.com/api/v1/payment/cart/' + obj.cartId,
+            url: obj.baseURL+'/payment/cart/' + obj.cartId,
             dataType: 'json',
             headers: {
                 'Content-type': 'application/json',
@@ -104,7 +106,7 @@ class Cart {
     getCart(){
         var obj = this;
         $.get({
-            url: 'https://store.xsolla.com/api/v1/cart/' + obj.cartId,
+            url: obj.baseURL+'/cart/' + obj.cartId,
             dataType: 'json',
             headers: {
                 'Content-type': 'application/json',
@@ -140,7 +142,7 @@ class Cart {
         $('.overlay').show();
         $.post(
             {
-                'url': 'https://store.xsolla.com/api/v1/payment/item/' + sku,
+                'url': obj.baseURL+'/payment/item/' + sku,
                 dataType: 'json',
                 'headers': {
                     'Authorization': 'Bearer ' + this.token
@@ -198,7 +200,7 @@ class Cart {
     }
 
     updateAvailableItem(sku, quantity) {
-        this.availableItems[sku] = this.availableItems[sku] + quantity;
+        this.availableItems[sku] = Math.max(this.availableItems[sku] + quantity,1);
         $('#add_button_' + sku)[0].innerHTML = 'ADD TO CART ' + this.availableItems[sku];
         $($('#add_button_' + sku)[0]).data('quantity', this.availableItems[sku]);
     }
