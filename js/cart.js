@@ -5,7 +5,7 @@ class Cart {
     token;
     availableItems;
 
-    baseURL = 'https://store.xsolla.com/v1';
+    baseURL = 'https://store.xsolla.com/api/v1';
 
     payStationStyle = {
         width: '740px',
