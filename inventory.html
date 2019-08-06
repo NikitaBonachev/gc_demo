@@ -1,0 +1,46 @@
+<html lang="en">
+    <head>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <title>Inventory</title>
+        <link rel="shortcut icon" type="image/png" href="img/favicon.ico"/>
+        <script src="js/inventory.js"></script>
+        <script
+                src="https://code.jquery.com/jquery-3.4.0.min.js"
+                integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+                crossorigin="anonymous">
+        </script>
+        <script src="js/router.js"></script>
+    </head>
+    <body>
+        <div class="row container" id="cart-row">
+            <div class="col m8">
+                <h2>Inventory</h2>
+            </div>
+            <div class="col m1" style="margin-top: 40px">
+                <a id="store-button" class="btn-floating waves-effect waves-light btn-large" onclick="router.redirect('inventory.html', 'index.html');"><i class="material-icons">shopping_cart</i></a>
+            </div>
+        </div>
+        <div id="inventory-items" class="row container">
+
+        </div>                    
+    </body>
+    <script>
+            var queryString = window.location.search.substring(1);
+            var queryParams = queryString.split('&');
+            var queryKeyValue = {};
+            queryParams.forEach(function (value, index) {
+                var pair = value.split('=');
+                queryKeyValue[pair[0]] = pair[1];
+            });
+    
+            if (!!queryKeyValue['token']) {
+                inventory.setToken(queryKeyValue['token']);
+            }
+            inventory.show();
+    </script>                
+</html>

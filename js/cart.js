@@ -158,7 +158,8 @@ class Cart {
     openPayStation(token){
         var options = {
             access_token: token,
-            lightbox: this.payStationStyle
+            lightbox: this.payStationStyle,
+            sandbox: true
         };
         XPayStationWidget.init(options);
         XPayStationWidget.open();
@@ -176,8 +177,8 @@ class Cart {
 
     getPrice(cartData){
         return {
-            amount: this.formatPrice(cartData.price.amount),
-            amountWithoutDiscount: this.formatPrice(cartData.price.amount_without_discount),
+            amount: this.formatPrice(cartData.price !== null ? cartData.price.amount : 0),
+            amountWithoutDiscount: this.formatPrice(cartData.price !== null ? cartData.price.amount_without_discount : 0),
             currency: '$'
         };
     }
