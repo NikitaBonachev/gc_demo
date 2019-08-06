@@ -5,7 +5,7 @@ class Cart {
     token;
     availableItems;
 
-    baseURL = 'https://store.xsolla.com/api/v1';
+    baseURL = 'https://store.xsolla.com/api/v1/project/30810';
 
     payStationStyle = {
         width: '740px',
@@ -25,7 +25,7 @@ class Cart {
     createCart(callback) {
         var obj = this;
         $.post({
-            url: obj.baseURL+'/project/30810/cart',
+            url: obj.baseURL+'/cart',
             headers: {
                 'Authorization': 'Bearer ' + this.token
             },
